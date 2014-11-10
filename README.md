@@ -14,23 +14,23 @@ Usage
 	
 `decrease`: reduction of probability for each item, in ]0, 1] (1 means history plays no role, so it's not useful). 
 
-`random`: underlying RNG in [0, 1[ (default is `Math.random`)
+`random`: underlying RNG in [0, 1[ (default is `Math.random`).
 
 ### .add(item [, n])
 
-Add an item that later can be returned by `random`. It may be a number or any other object.
+Add an item that later can be returned by `random`. It may be a number or any other object. Returns the number of items.
 
-`n`: probability factor, for instance if you want that a given item has twice chances to pop out, set n to 2.
+`n`: probability factor, for instance if you want that a given item has twice chances to pop out, set n to 2 (default is 1).
 
 The more recently an item has been added, the least recently chosen it is supposed to be, therefore the more chances it has to be returned by a next call to `random`. Call `shuffle` if it's not the case, for instance when initializing the RNG.
 
 ### .clear()
 
-Reset items.
+Remove all items.
 
 ### .remove(item)
 
-Remove item. Returns true if item was found (and removed), false otherwise.
+Remove `item`. Returns `true` if item was found (and removed), `false` otherwise.
 
 ### .random()
 

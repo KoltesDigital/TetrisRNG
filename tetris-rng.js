@@ -22,20 +22,57 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+/**
+ * Tetris Random Number Generator
+ *
+ * Generate random number where least recently popped numbers have higher
+ * chances of popping out.
+ *
+ * Actually work with any kind of object, not only with numbers.
+ *
+ * The name comes from the game Tetris, where the probability of appearance of
+ * pieces follow more or less this distribution. 
+ *
+ * @constructor
+ * @param {number} decrease Reduction of probability for each item, in ]0, 1]
+ *     (1 means history plays no role, so it's not useful).
+ * @param {?number} random Underlying RNG in [0, 1[ (default is Math.random).
+ */
 function TetrisRNG(decrease, random) {
 	this.decrease = decrease;
 	this._random = random || Math.random;
 	this.items = [];
 }
 
+/**
+ * Add an item that later can be returned by `random`. It may be a number or any
+ * other object. Returns the number of items.
+ * 
+ * The more recently an item has been added, the least recently chosen it is
+ * supposed to be, therefore the more chances it has to be returned by a next
+ * call to `random`. Call `shuffle` if it's not the case, for instance when
+ * initializing the RNG.
+ *
+ * @param {Object} item
+ * @param {?number} n probability factor, for instance if you want that a given
+ *     item has twice chances to pop out, set n to 2 (default is 1).
+ */
 TetrisRNG.prototype.add = function(item, n) {
-		return this.items.unshift([item, n || 1]);
+	return this.items.unshift([item, n || 1]);
 };
 
+/**
+ * Remove all items.
+ */
 TetrisRNG.prototype.clear = function() {
 	this.items = [];
 };
 
+/**
+ * Remove item.
+ * @param {Object} item
+ * @return {boolean} true if item was found (and removed), false otherwise.
+ */
 TetrisRNG.prototype.remove = function(item) {
 	for (var i = 0, n = this.items.length; i < n; ++i)
 		if (this.items[i][0] === item) {
@@ -45,6 +82,9 @@ TetrisRNG.prototype.remove = function(item) {
 	return false;
 };
 
+/**
+ * Return a random item.
+ */
 TetrisRNG.prototype.random = function() {
 	var roulette = [];
 	var ratio = 1;
@@ -64,6 +104,9 @@ TetrisRNG.prototype.random = function() {
 	}
 };
 
+/**
+ * Shuffle items in the LRU history.
+ */
 TetrisRNG.prototype.shuffle = function() {
 	for (var i = this.items.length - 1; i > 0; --i) {
 		var j = Math.floor(Math.random() * (i + 1));
